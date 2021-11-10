@@ -20,7 +20,5 @@ from django.urls import include
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # include app urls
     path('calc/', include('calc_app.urls')),
-
 ]
