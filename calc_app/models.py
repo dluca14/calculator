@@ -17,9 +17,9 @@ class RequestModel(models.Model):
 
 
 class RowModel(models.Model):
-    s = models.CharField(max_length=50)
-    v = models.CharField(max_length=50)
-    t = models.CharField(max_length=50)
+    s = models.FloatField(max_length=50)
+    v = models.FloatField(max_length=50)
+    t = models.FloatField(max_length=50)
 
     request = models.ForeignKey(RequestModel, on_delete=models.CASCADE, related_name='rows')
 
