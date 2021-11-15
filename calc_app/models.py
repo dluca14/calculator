@@ -1,17 +1,6 @@
 from django.db import models
 
 
-def calculate_missing_col(s, v, t):
-    if s == '':
-        s = int(v) * int(t)
-    elif v == '':
-        v = int(s) / int(t)
-    else:
-        t = int(s) / int(v)
-
-    return s, v, t
-
-
 class RequestModel(models.Model):
     file_name = models.CharField(max_length=100)
 

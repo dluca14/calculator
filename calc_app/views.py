@@ -4,34 +4,28 @@ from datetime import timedelta
 
 from django.http import HttpResponse
 
-from calc_app.models import RequestModel, RowModel, ResponseModel, calculate_missing_col
-from calc_app.utils import Timer
+from calc_app.models import RequestModel, RowModel, ResponseModel
+from business_logic.timer import Timer
+from business_logic.utils import get_file_name, process_file
 
 
 def calculate(request):
-    with Timer('calculate function') as timer:
+    with Timer('calculate_view') as timer:
         decoded_body = request.body.decode()
-
-        file_name = decoded_body[decoded_body.find('filename=')+10: decoded_body.find('.csv')+4]
+        file_name = get_file_name(decoded_body)
         req = RequestModel.objects.create(file_name=file_name)
 
         response = HttpResponse(
             content_type='text/csv',
             headers={'Content-Disposition': 'attachment; filename="output.csv"'},
         )
+
         writer = csv.writer(response)
         writer.writerow(['S', 'V', 'T'])
-
-        cr = csv.reader(decoded_body.splitlines(), delimiter=',')
-        my_list = list(cr)
-        flag = False
-        for row in my_list:
-            if flag is True and len(row) == 3:
-                s, v, t = calculate_missing_col(row[0], row[1], row[2])
-                writer.writerow([str(s), str(v), str(t)])
-                RowModel.objects.create(s=s, v=v, t=t, request=req)
-            if row == ['S', 'V', 'T']:
-                flag = True
+        file_content = process_file(decoded_body)
+        for row in file_content:
+            writer.writerow(row.values())
+            RowModel.objects.create(s=row['s'], v=row['v'], t=row['t'], request=req)
 
     ResponseModel.objects.create(
         calculation_time=str(timedelta(seconds=timer.elapsed)),

@@ -17,5 +17,3 @@ class Timer(object):
 
     def __exit__(self, type, value, traceback):
         self.elapsed = time.perf_counter() - self.start
-
-

@@ -1,7 +1,7 @@
 
 Implement a simple Django application which has the following functionality:
 - HTTP API 
-  - POST /api/calculate (takes a csv input file)
+  - **POST** /api/calculate (takes a csv input file)
     - The CSV file should have 3 columns - "S", "V" and "T"
     - For each row of the csv one of these must be empty, which means that it needs to be calculated
       - Example input CSV: <br/>
@@ -15,7 +15,7 @@ Implement a simple Django application which has the following functionality:
     - Each response should be assigned unique id and be recorded in the database
       - The response should have a relation to the request in the database.
       - The response should contain the time it took to execute the request calculation function 
-  - GET /api/responses - should return all responses as a json object that has the following fields for each response: request_id, response_id, calculation_time
+  - **GET** /api/responses - should return all responses as a json object that has the following fields for each response: request_id, response_id, calculation_time
 - Admin part - create a simple admin site that could be used to browse through all entities created in the system and to edit them.
 - Tests
   - Unit tests
