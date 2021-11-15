@@ -1,6 +1,5 @@
 import csv
 import json
-import time
 from datetime import timedelta
 
 from django.http import HttpResponse

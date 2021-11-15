@@ -12,10 +12,10 @@ class Timer(object):
     #     self.end = time()
     #     print(f"{self.description}: {self.end - self.start}")
     def __enter__(self):
-        self.elapsed = time.perf_counter()
+        self.start = time.perf_counter()
         return self
 
     def __exit__(self, type, value, traceback):
-        self.elapsed = time.perf_counter() - self.elapsed
+        self.elapsed = time.perf_counter() - self.start
 
 
