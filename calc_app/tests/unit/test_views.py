@@ -1,3 +1,4 @@
+import json
 from datetime import timedelta
 import unittest
 from unittest.mock import Mock, patch
@@ -57,3 +58,19 @@ class MyTestCase(unittest.TestCase):
                 calculation_time=str(timedelta(seconds=timer_mock.elapsed)),
                 calculation_function='s = v * t', request=request_obj_mock
             )
+
+    def test_responses(self):
+        response_mock = Mock(id=1,
+                             calculation_time='0.1',
+                             request=Mock(id=2))
+        response_model_mock = Mock()
+        response_model_mock.objects.return_value.all.return_value = [response_mock]
+        http_response_mock = Mock()
+
+        with patch.multiple('calc_app.views',
+                            ResponseModel=response_model_mock):
+
+            response_model_mock.objects.all.assert_called_once()
+            http_response_mock.assert_called_once_with(json.dumps([response_mock]),
+                                                       status=200,
+                                                       content_type='json')
