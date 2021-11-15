@@ -3,8 +3,7 @@ from datetime import timedelta
 import unittest
 from unittest.mock import Mock, patch
 
-
-from calc_app.views import calculate
+from calc_app.views import calculate, responses
 
 
 class MyTestCase(unittest.TestCase):
@@ -69,6 +68,7 @@ class MyTestCase(unittest.TestCase):
 
         with patch.multiple('calc_app.views',
                             ResponseModel=response_model_mock):
+            responses(Mock())
 
             response_model_mock.objects.all.assert_called_once()
             http_response_mock.assert_called_once_with(json.dumps([response_mock]),
