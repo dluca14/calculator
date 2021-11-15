@@ -7,7 +7,7 @@ def get_file_name(body: str):
     return file_name
 
 
-def process_file(body):
+def get_file_content(body):
     my_list = list(csv.reader(body.splitlines(), delimiter=','))
 
     rows = []
