@@ -1,14 +1,14 @@
-import json
-from datetime import timedelta
 from unittest.mock import Mock, patch, MagicMock
 
 from calc_app import views
 
 
 def test_calculate():
-    # timer_obj_mock = Mock(elapsed=1)
-    # timer_class_mock = Mock()
-    # timer_class_mock.__enter__.return_value = timer_obj_mock
+    timedelta_mock = Mock(return_value=1)
+
+    timer_obj_mock = Mock(elapsed=1)
+    timer_class_mock = MagicMock()
+    timer_class_mock.__enter__.return_value = timer_obj_mock
 
     body = '----------------------------580649799044272887683367\r\nContent-Disposition: form-data; name="file"; filename="sample.csv"\r\nContent-Type: text/csv\r\n\r\nS,V,T\r\n3,5,\r\n2,,3\r\n,4,5\r\n\r\n----------------------------580649799044272887683367--'
     request_mock = Mock()
@@ -35,7 +35,8 @@ def test_calculate():
     response_model_mock.objects.create.return_value = Mock()
 
     with patch.multiple('calc_app.views',
-                        # Timer=timer_class_mock,
+                        timedelta=timedelta_mock,
+                        Timer=timer_class_mock,
                         get_file_name=get_file_name_mock,
                         RequestModel=request_model_mock,
                         csv=csv_mock,
@@ -53,7 +54,11 @@ def test_calculate():
 
         assert len(row_model_mock.objects.create.mock_calls) == 3
 
-        response_model_mock.objects.create.assert_called_once()
+        timedelta_mock.assert_called_once()
+        response_model_mock.objects.create.assert_called_once_with(
+            calculation_time=str(1),
+            calculation_function='s = v * t', request=request_obj_mock
+        )
         # response_model_mock.assert_called_once_with(
         #     calculation_time=str(timedelta(seconds=timer_mock.elapsed)),
         #     calculation_function='s = v * t', request=request_obj_mock
