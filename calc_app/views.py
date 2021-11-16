@@ -37,7 +37,8 @@ def calculate(request):
 
 def responses(request):
     response = []
-    for res in ResponseModel.objects.all():
+    ress = ResponseModel.objects.all()
+    for res in ress:
         response.append({
             'request_id': res.request.id,
             'response_id': res.id,
