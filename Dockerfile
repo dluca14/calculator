@@ -17,16 +17,6 @@ RUN pip install pipenv
 COPY Pipfile /calculator/
 COPY Pipfile.lock /calculator/
 RUN test -f Pipfile.lock || (echo 'Please run "pipenv lock" to generate the Pipfile.lock file'; false)
-RUN pipenv install --system --deploy
+RUN pipenv install --system --deploy --ignore-pipfile
 
-## Install pipenv and compilation dependencies
-#RUN pip install pipenv
-#RUN apt-get update && apt-get install -y --no-install-recommends gcc
-#
-## Install python dependencies in /.venv
-#COPY Pipfile .
-#COPY Pipfile.lock .
-#RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
-
-# copy project
 COPY . .
