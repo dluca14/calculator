@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  web:
+  web_1:
     container_name: dev_backend
     build:
       context: .
@@ -12,20 +12,17 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
-  db:
+      - db_1
+  db_1:
     container_name: dev_db
     image: postgres:12.0-alpine
     env_file: .env
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=calculator_db
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=calculator_db
+      - POSTGRES_PASSWORD=postgres
 #      - POSTGRES_DB=${POSTGRES_DB}
 #      - POSTGRES_USER=${POSTGRES_USER}
 #      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-
-#volumes:
-#  postgres_data:
