@@ -11,7 +11,6 @@ from calc_app.tasks import process_csv_file
 
 
 def calculate(request):
-    response = process_csv_file.delay(1, 2)
 
     with Timer('calculate_view') as timer:
         decoded_body = request.body.decode()
@@ -27,9 +26,13 @@ def calculate(request):
         writer = csv.writer(response)
         writer.writerow(['S', 'V', 'T'])
         file_content = get_file_content(decoded_body)
+        rows = []
         for row in file_content:
             writer.writerow(row.values())
-            RowModel.objects.create(s=row['s'], v=row['v'], t=row['t'], request=req)
+            rows.append(
+                RowModel(s=row['s'], v=row['v'], t=row['t'], request=req)
+            )
+        RowModel.objects.bulk_create(rows)
 
     ResponseModel.objects.create(
         calculation_time=str(timedelta(seconds=timer.elapsed)),
