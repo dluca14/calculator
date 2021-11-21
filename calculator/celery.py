@@ -6,11 +6,13 @@ from django.conf import settings
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'calculator.settings')
-app = Celery('calculator')
 
-# Using a string here means the worker will not have to
-# pickle the object when using Windows.
-app.config_from_object('django.conf:settings')
+# app = Celery('calculator')
+# app = Celery('tasks', backend='redis://localhost', broker='pyamqp://')
+app = Celery('calculator', backend='rpc://', broker='pyamqp://')
+
+app.config_from_object('django.conf:settings', namespace='CELERY')
+
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 
