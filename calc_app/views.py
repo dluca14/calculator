@@ -18,21 +18,14 @@ def calculate(request):
         file_name = get_file_name(decoded_body)
         req = RequestModel.objects.create(file_name=file_name)
 
+        task = process_csv_file.delay(file_name, req.id, decoded_body)
+
         response = HttpResponse(
             content_type='text/csv',
             headers={'Content-Disposition': 'attachment; filename="output.csv"'},
         )
-
         writer = csv.writer(response)
-        writer.writerow(['S', 'V', 'T'])
-        file_content = get_file_content(decoded_body)
-        rows = []
-        for row in file_content:
-            writer.writerow(row.values())
-            rows.append(
-                RowModel(s=row['s'], v=row['v'], t=row['t'], request=req)
-            )
-        RowModel.objects.bulk_create(rows)
+        writer.writerow(task.info)
 
     ResponseModel.objects.create(
         calculation_time=str(timedelta(seconds=timer.elapsed)),

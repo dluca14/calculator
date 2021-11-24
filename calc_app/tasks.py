@@ -1,4 +1,6 @@
 from __future__ import absolute_import
+
+from io import StringIO
 from datetime import timedelta
 
 import csv
@@ -14,9 +16,20 @@ logger = get_task_logger(__name__)
 
 
 @shared_task
-def process_csv_file(a, b):
+def process_csv_file(file_name, req_id, decoded_body):
     logger.info("Process .csv file request")
 
-    # logger.info("End process for {} file".format(file_name))
+    req = RequestModel.objects.get(id=req_id)
 
-    return a + b
+    file_content = get_file_content(decoded_body)
+    rows = [['S', 'V', 'T']]
+    rows_obj = []
+    for row in file_content:
+        rows.append([row['s'], row['v'], row['t']])
+
+        rows_obj.append(RowModel(s=row['s'], v=row['v'], t=row['t'], request=req))
+    RowModel.objects.bulk_create(rows_obj)
+
+    logger.info("End process for {} file".format(file_name))
+
+    return rows
