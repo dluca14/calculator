@@ -36,4 +36,6 @@ Implement a simple Django application which has the following functionality:
 ## Implementation:
 - make external package containing business-logic
 - dockerized project
-- add celery+rabbitmq for processing requests
+- add Celery + RabbitMQ for processing requests
+- add unit tests using pytest
+- use pipenv
