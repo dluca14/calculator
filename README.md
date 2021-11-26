@@ -1,4 +1,4 @@
-
+## Description:
 Implement a simple Django application which has the following functionality:
 - HTTP API 
   - **POST** /api/calculate (takes a csv input file)
@@ -30,3 +30,12 @@ Implement a simple Django application which has the following functionality:
   - Follow the widely adopted software development best practices
   - Deliver the code in a public GitHub repository
   - Use the appropriate design patterns at places where you expect that the functionality might change in future
+  
+--------------------------------------------------------------------------
+
+## Implementation:
+- make external package containing business-logic
+- dockerized project
+- add Celery + RabbitMQ for processing requests
+- add unit tests using pytest
+- use pipenv
